@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components/native"
 import { StyleSheet } from "react-native"
-import { Container, ScrollContainer } from "@github-shared/layout"
 import { R } from "@github/res"
+import { Container, ScrollContainer } from "@github-shared/layout"
 import { IFixedScreenProps, IScrollScreenProps } from "./screen.props"
 
 const screen = css`

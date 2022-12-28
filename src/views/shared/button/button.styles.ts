@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components/native"
 import { PressableAndroidRippleConfig, StyleSheet } from "react-native"
-import { Column } from "@github-shared/layout"
 import { R } from "@github/res"
+import { Column } from "@github-shared/layout"
 import { IButtonProps, ButtonPreset, RipplePreset } from "./button.props"
 
 export const Container = styled(Column)`

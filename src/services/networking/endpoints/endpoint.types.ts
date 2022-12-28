@@ -75,8 +75,10 @@ export type IParamsEmptyResponseEndpoint<TPathParams = DefaultPathParamsType> = 
 /**
  * Endpoint without body data and path params
  */
-export type IEmptyDataEndpoint<TServerResponse, TResponse = DefaultResponseType<TServerResponse>> =
-  IParamsEndpoint<TServerResponse, UndefinedPathParamsType, TResponse>
+export type IEmptyDataEndpoint<
+  TServerResponse,
+  TResponse = DefaultResponseType<TServerResponse>,
+> = IParamsEndpoint<TServerResponse, UndefinedPathParamsType, TResponse>
 
 /**
  * Endpoint without body data, path params and response

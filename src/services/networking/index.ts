@@ -1,4 +1,5 @@
 export { default as API } from "./api"
+export * from "./api"
 export * from "./endpoints"
 export * from "./api.config"
 export * from "./api.types"

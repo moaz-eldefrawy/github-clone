@@ -23,3 +23,8 @@ export const DEFAULT_API_CONFIG: IApiConfig = {
   url: ENV.baseURL,
   minimumTimeout: ApiConstants.requestTimeout,
 }
+
+export const GITHUB_API_CONFIG: IApiConfig = {
+  url: "https://api.github.com",
+  minimumTimeout: ApiConstants.requestTimeout,
+}
