@@ -28,13 +28,6 @@ export const SearchComponent = () => {
   const dispatch = useDispatch()
   const perPage = 30
 
-  useEffect(() => {
-    if (currPage === nextPage) {
-      setNextPage(nextPage + 1)
-      fetchUsers(searchPhrase, currPage)
-    }
-  }, [searchPhrase, currPage, nextPage, fetchUsers])
-
   // timeout can return duplicate users
   const uniqeUsers = (users: Array<IGithubUser>): Array<IGithubUser> => {
     const userIds: Set<string> = new Set()
@@ -48,13 +41,9 @@ export const SearchComponent = () => {
     })
   }
 
-  // can be moved to another folder for reuse.
+  // can be moved to another (API) folder for reuse.
   const fetchUsers = useCallback(
     async (phrase: string, page: number) => {
-      if (totalCount === searchResults.length) {
-        return
-      }
-
       const endPoint: IEmptyDataEndpoint<IGithubResponse> = {
         method: HttpMethod.Get,
         path: `/search/users?q=${phrase}&&per_page=${perPage}&&page=${page}`,
@@ -82,7 +71,7 @@ export const SearchComponent = () => {
       }
       setIsLoading(false)
     },
-    [dispatch, searchResults.length, totalCount],
+    [dispatch],
   )
 
   const handleSubmit = (event: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
@@ -104,6 +93,13 @@ export const SearchComponent = () => {
       </Button>
     )
   }
+
+  useEffect(() => {
+    if (currPage === nextPage && totalCount === searchResults.length) {
+      setNextPage(nextPage + 1)
+      fetchUsers(searchPhrase, currPage)
+    }
+  }, [searchPhrase, currPage, nextPage, fetchUsers, totalCount, searchResults.length])
 
   return (
     <SafeAreaView top bottom>
