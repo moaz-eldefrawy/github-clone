@@ -42,7 +42,6 @@ export const SearchComponent = () => {
     })
   }
 
-  // can be moved to another (API) folder for reuse.
   const fetchUsers = useCallback(
     async (phrase: string, page: number) => {
       const res: IResponse<IGithubResponse> = await githubApi.request(githubUsersEndPoint, {
@@ -50,9 +49,10 @@ export const SearchComponent = () => {
       })
       if (res.ok) {
         if (res.data.incompleteResults) {
-          // TODO: one of 2 options depeding on the requirements
-          // 1- ignore if missing the reuslt doesn't matter
-          // 2- repeat for a fixed ammount of times (i.e 5) until we get complete results
+          // this happens due to request timeout by github
+          // waiting to get the complete results usually works
+          setTimeout(() => fetchUsers(phrase, page), 2000)
+          return
         }
         setTotalCount(res.data.totalCount)
         setSearchResults((seachRes: Array<IGithubUser>) =>
