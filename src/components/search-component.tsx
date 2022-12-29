@@ -10,18 +10,19 @@ import {
 } from "react-native"
 import { useDispatch } from "react-redux"
 import { Button, SafeAreaView, Text } from "@github-shared"
-import { HttpMethod, IEmptyDataEndpoint, IResponse } from "@github/services"
+import { IResponse } from "@github/services"
 import {
   IGithubUser,
   IGithubResponse,
   githubApi,
+  githubUsersEndPoint,
 } from "@github/services/networking/endpoints/github"
 import { showErrorAction } from "@github/state"
 
 export const SearchComponent = () => {
   const [searchPhrase, setSearchPhrase] = useState<string>("")
   const [searchResults, setSearchResults] = useState<Array<IGithubUser>>([])
-  const [totalCount, setTotalCount] = useState<number>(-1)
+  const [totalCount, setTotalCount] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<Boolean>(false)
   const [currPage, setCurrPage] = useState<number>(0)
   const [nextPage, setNextPage] = useState<number>(1)
@@ -44,18 +45,14 @@ export const SearchComponent = () => {
   // can be moved to another (API) folder for reuse.
   const fetchUsers = useCallback(
     async (phrase: string, page: number) => {
-      const endPoint: IEmptyDataEndpoint<IGithubResponse> = {
-        method: HttpMethod.Get,
-        path: `/search/users?q=${phrase}&&per_page=${perPage}&&page=${page}`,
-      }
-      // TODO: use path params, it not obvious from the regex how to use it??
-      const res: IResponse<IGithubResponse> = await githubApi.request(endPoint, {})
+      const res: IResponse<IGithubResponse> = await githubApi.request(githubUsersEndPoint, {
+        pathParams: [phrase, perPage, page],
+      })
       if (res.ok) {
         if (res.data.incompleteResults) {
-          // TODO: one of 2 options depeding on the API
+          // TODO: one of 2 options depeding on the requirements
           // 1- ignore if missing the reuslt doesn't matter
           // 2- repeat for a fixed ammount of times (i.e 5) until we get complete results
-          return
         }
         setTotalCount(res.data.totalCount)
         setSearchResults((seachRes: Array<IGithubUser>) =>
@@ -95,11 +92,11 @@ export const SearchComponent = () => {
   }
 
   useEffect(() => {
-    if (currPage === nextPage && totalCount === searchResults.length) {
+    if (currPage === nextPage && (totalCount > searchResults.length || totalCount === 0)) {
       setNextPage(nextPage + 1)
       fetchUsers(searchPhrase, currPage)
     }
-  }, [searchPhrase, currPage, nextPage, fetchUsers, totalCount, searchResults.length])
+  }, [searchPhrase, currPage, nextPage, totalCount, searchResults.length, fetchUsers])
 
   return (
     <SafeAreaView top bottom>
