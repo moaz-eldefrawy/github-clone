@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native"
 import { useDispatch } from "react-redux"
-import { Button, SafeAreaView, Text } from "@github-shared"
+import { ActivityIndicator, Button, SafeAreaView, Screen, Text } from "@github-shared"
 import { IResponse } from "@github/services"
 import {
   IGithubUser,
@@ -18,8 +18,9 @@ import {
   githubUsersEndPoint,
 } from "@github/services/networking/endpoints/github"
 import { showErrorAction } from "@github/state"
+import { R } from "@github/res"
 
-export const SearchComponent = () => {
+export const SearchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState<string>("")
   const [searchResults, setSearchResults] = useState<Array<IGithubUser>>([])
   const [totalCount, setTotalCount] = useState<number>(0)
@@ -29,7 +30,7 @@ export const SearchComponent = () => {
   const dispatch = useDispatch()
   const perPage = 30
 
-  // timeout can return duplicate users
+  // I am not sure why, but timeout can return duplicate users.
   const uniqeUsers = (users: Array<IGithubUser>): Array<IGithubUser> => {
     const userIds: Set<string> = new Set()
     return users.filter((user: IGithubUser) => {
@@ -99,31 +100,32 @@ export const SearchComponent = () => {
   }, [searchPhrase, currPage, nextPage, totalCount, searchResults.length, fetchUsers])
 
   return (
-    <SafeAreaView top bottom>
-      <View>
-        <TextInput
-          placeholderTextColor="grey"
-          style={styles.input}
-          placeholder="Search Github Users..."
-          value={searchPhrase}
-          onChangeText={setSearchPhrase}
-          onSubmitEditing={handleSubmit}
-          // clearButtonMode={"while-editing"}
-        />
-      </View>
-      <View>
-        {isLoading ? (
-          <Text>Loading ..</Text>
-        ) : (
-          <FlatList
-            data={searchResults}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            onEndReached={onEnd}
+    <Screen preset="fixedStack">
+      <SafeAreaView top bottom>
+        <View>
+          <TextInput
+            placeholderTextColor="grey"
+            style={styles.input}
+            placeholder={R.string.search.placeholder}
+            value={searchPhrase}
+            onChangeText={setSearchPhrase}
+            onSubmitEditing={handleSubmit}
           />
-        )}
-      </View>
-    </SafeAreaView>
+        </View>
+        <View>
+          {!isLoading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <FlatList
+              data={searchResults}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              onEndReached={onEnd}
+            />
+          )}
+        </View>
+      </SafeAreaView>
+    </Screen>
   )
 }
 

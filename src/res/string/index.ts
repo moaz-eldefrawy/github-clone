@@ -1,6 +1,7 @@
 const string = Object.freeze({
   shared: {
     errorTitle: "Error",
+    loading: "Loading ...",
   },
   errors: {
     networkError: "Please check your internet connection and try again",
@@ -13,6 +14,9 @@ const string = Object.freeze({
     rejectError: "You aren't authorized to perform this request",
     badDataError: "Something went wrong when parsing data, please try again later",
     exceptionError: "Something went wrong when performing request, please contact us",
+  },
+  search: {
+    placeholder: "Search Github Users ...",
   },
 })
 
