@@ -8,7 +8,7 @@ const RootStack = createStackNavigator<IRootParamList>()
 
 const RootNavigator = () => {
   return (
-    <RootStack.Navigator initialRouteName={AppRoute.Search} screenOptions={{ headerShown: true }}>
+    <RootStack.Navigator initialRouteName={AppRoute.Search} screenOptions={{ headerShown: false }}>
       <RootStack.Screen name={AppRoute.Search} component={SearchScreen} />
       {/* <RootStack.Group screenOptions={{ presentation: "modal" }}>
         {// any modal screen  }

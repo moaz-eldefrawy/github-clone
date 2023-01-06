@@ -17,7 +17,7 @@ import {
   githubApi,
   githubUsersEndPoint,
 } from "@github/services/networking/endpoints/github"
-import { showErrorAction } from "@github/state"
+import { setLoading, showErrorAction } from "@github/state"
 import { R } from "@github/res"
 
 export const SearchScreen = () => {
@@ -78,6 +78,7 @@ export const SearchScreen = () => {
     setCurrPage(1)
     setNextPage(1)
     setTotalCount(0)
+    setLoading(true)
   }
 
   const onEnd = () => {
@@ -87,7 +88,7 @@ export const SearchScreen = () => {
   const renderItem: ListRenderItem<IGithubUser> = ({ item }) => {
     return (
       <Button style={[styles.item]}>
-        <Text style={[styles.title]}>{item.login}</Text>
+        <Text>{item.login}</Text>
       </Button>
     )
   }
@@ -102,27 +103,29 @@ export const SearchScreen = () => {
   return (
     <Screen preset="fixedStack">
       <SafeAreaView top bottom>
-        <View>
-          <TextInput
-            placeholderTextColor="grey"
-            style={styles.input}
-            placeholder={R.string.search.placeholder}
-            value={searchPhrase}
-            onChangeText={setSearchPhrase}
-            onSubmitEditing={handleSubmit}
-          />
-        </View>
-        <View>
-          {!isLoading ? (
-            <ActivityIndicator size="large" color="#0000ff" />
-          ) : (
-            <FlatList
-              data={searchResults}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              onEndReached={onEnd}
+        <View style={styles.container}>
+          <View style={styles.searchBarView}>
+            <TextInput
+              placeholderTextColor={R.color.textInputPlaceholder}
+              style={styles.input}
+              placeholder={R.string.search.placeholder}
+              value={searchPhrase}
+              onChangeText={setSearchPhrase}
+              onSubmitEditing={handleSubmit}
             />
-          )}
+          </View>
+          <View style={styles.resultsView}>
+            {isLoading ? (
+              <ActivityIndicator preset="large" />
+            ) : (
+              <FlatList
+                data={searchResults}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                onEndReached={onEnd}
+              />
+            )}
+          </View>
         </View>
       </SafeAreaView>
     </Screen>
@@ -131,22 +134,22 @@ export const SearchScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    backgroundColor: R.color.background,
+    height: R.spacing.fullheight,
     display: "flex",
-    paddingTop: 20,
   },
   item: {
-    paddingVertical: 10,
-  },
-  title: {
-    fontSize: 20,
-    color: "black",
-    display: "flex",
+    paddingVertical: R.spacing.medium,
   },
   input: {
-    borderBottomColor: "white",
-    fontSize: 20,
-    borderWidth: 1,
-    color: "black",
+    color: R.color.text,
+  },
+  searchBarView: {
+    flex: 1,
+  },
+  resultsView: {
+    height: R.spacing.fullheight,
+    flex: 10,
+    justifyContent: "center",
   },
 })
