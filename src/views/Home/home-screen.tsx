@@ -38,3 +38,7 @@ const styles = StyleSheet.create({
     padding: R.spacing.medium,
   },
 })
+
+// create a component that renders the results coming from github user search api
+// Path: src\views\search\search-results.tsx
+// Compare this snippet from src\views\search\search-screen.tsx:

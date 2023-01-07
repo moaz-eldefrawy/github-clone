@@ -10,7 +10,7 @@ import {
 } from "react-native"
 import { useDispatch } from "react-redux"
 import { Header, StyledCancelButton, StyledStatusBar } from "@github/views/Home/home-style"
-import { ActivityIndicator, Button, Image, SafeAreaView, Screen, Text } from "@github-shared"
+import { ActivityIndicator, Button, Image, SafeAreaView, Screen } from "@github-shared"
 import { IResponse } from "@github/services"
 import {
   IGithubUser,
@@ -21,6 +21,7 @@ import {
 import { showErrorAction } from "@github/state"
 import { R } from "@github/res"
 import { NavigationService } from "@github/navigation"
+import { UserItem } from "./user-item"
 
 export const SearchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState<string>("")
@@ -102,11 +103,7 @@ export const SearchScreen = () => {
   }
 
   const renderItem: ListRenderItem<IGithubUser> = ({ item }) => {
-    return (
-      <Button style={[styles.item]}>
-        <Text>{item.login}</Text>
-      </Button>
-    )
+    return <UserItem user={item} />
   }
 
   useEffect(() => {
@@ -114,7 +111,7 @@ export const SearchScreen = () => {
       setNextPage(nextPage + 1)
       fetchUsers(searchPhrase, currPage)
     }
-  }, [searchPhrase, currPage, nextPage, totalCount, searchResults.length, fetchUsers, isFocused])
+  }, [searchPhrase, currPage, nextPage, totalCount, searchResults.length, fetchUsers])
 
   return (
     <Screen preset="fixedStack">

@@ -21,6 +21,7 @@ const string = Object.freeze({
   search: {
     title: "Search",
     placeholder: "Search Github Users ...",
+    type: "type",
   },
 })
 

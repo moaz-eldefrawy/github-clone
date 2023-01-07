@@ -1,5 +1,4 @@
 {
-  "files.eol": "\r\n",
   "eslint.alwaysShowStatus": true,
   "eslint.lintTask.enable": true,
   "eslint.packageManager": "yarn",
@@ -12,7 +11,9 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.preferences.includePackageJsonAutoImports": "on",
   "editor.tabSize": 2,
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.fontLigatures": false,
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

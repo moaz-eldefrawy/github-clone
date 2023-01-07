@@ -1,17 +1,18 @@
 import styled from "styled-components/native"
 import { StatusBar, View } from "react-native"
+import React from "react"
 import { R } from "@github/res"
 import palette from "@github/res/color/palette"
 import { Button } from "@github-shared"
 
 // create a header styled view
 export const Header = styled(View)`
-  flexdirection: row;
-  backgroundcolor: ${palette.black.smoke};
-  alignitems: center;
-  justifycontent: space-between;
+  flexDirection: row;
+  backgroundColor: ${palette.black.smoke};
+  alignItems: center;
+  justifyContent: space-between;
   height: ${R.spacing.headerHeight}px;
-  paddinghorizontal: ${R.spacing.smaller}px;
+  paddingHorizontal: ${R.spacing.smaller}px;
 `
 
 // make my own status bar
