@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react"
 import {
   FlatList,
+  Keyboard,
   ListRenderItem,
   NativeSyntheticEvent,
   StyleSheet,
@@ -9,7 +10,7 @@ import {
   View,
 } from "react-native"
 import { useDispatch } from "react-redux"
-import { ActivityIndicator, Button, SafeAreaView, Screen, Text } from "@github-shared"
+import { ActivityIndicator, Button, Image, SafeAreaView, Screen, Text } from "@github-shared"
 import { IResponse } from "@github/services"
 import {
   IGithubUser,
@@ -17,7 +18,7 @@ import {
   githubApi,
   githubUsersEndPoint,
 } from "@github/services/networking/endpoints/github"
-import { setLoading, showErrorAction } from "@github/state"
+import { showErrorAction } from "@github/state"
 import { R } from "@github/res"
 
 export const SearchScreen = () => {
@@ -27,6 +28,7 @@ export const SearchScreen = () => {
   const [isLoading, setIsLoading] = useState<Boolean>(false)
   const [currPage, setCurrPage] = useState<number>(0)
   const [nextPage, setNextPage] = useState<number>(1)
+  const [isFocused, setIsFocused] = useState<Boolean>(false)
   const dispatch = useDispatch()
   const perPage = 30
 
@@ -45,6 +47,13 @@ export const SearchScreen = () => {
 
   const fetchUsers = useCallback(
     async (phrase: string, page: number) => {
+      if (phrase.length === 0) {
+        setIsLoading(false)
+        setTotalCount(0)
+        setSearchResults([])
+        return
+      }
+
       const res: IResponse<IGithubResponse> = await githubApi.request(githubUsersEndPoint, {
         pathParams: [phrase, perPage, page],
       })
@@ -78,11 +87,19 @@ export const SearchScreen = () => {
     setCurrPage(1)
     setNextPage(1)
     setTotalCount(0)
-    setLoading(true)
+    if (searchPhrase.length > 0) {
+      setIsLoading(true)
+    }
   }
 
   const onEnd = () => {
     setCurrPage(nextPage)
+  }
+
+  const clearInput = () => {
+    setSearchPhrase("")
+    setIsFocused(false)
+    Keyboard.dismiss()
   }
 
   const renderItem: ListRenderItem<IGithubUser> = ({ item }) => {
@@ -105,9 +122,16 @@ export const SearchScreen = () => {
       <SafeAreaView top bottom>
         <View style={styles.container}>
           <View style={styles.searchBarView}>
+            {isFocused && (
+              <Button style={styles.backButton} onPress={() => clearInput()}>
+                <Image source={R.image.backAndroid} />
+              </Button>
+            )}
             <TextInput
               placeholderTextColor={R.color.textInputPlaceholder}
-              style={styles.input}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              style={[styles.input, isFocused && styles.activeInput]}
               placeholder={R.string.search.placeholder}
               value={searchPhrase}
               onChangeText={setSearchPhrase}
@@ -143,9 +167,21 @@ const styles = StyleSheet.create({
   },
   input: {
     color: R.color.text,
+    fontSize: R.fontSize.big,
+    flex: 8,
+  },
+  activeInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: R.color.text,
+  },
+  backButton: {
+    flex: 2,
   },
   searchBarView: {
     flex: 1,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   resultsView: {
     height: R.spacing.fullheight,
