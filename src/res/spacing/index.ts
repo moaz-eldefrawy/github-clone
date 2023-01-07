@@ -10,6 +10,7 @@ const spacing = {
   massive: 40,
   giant: 60,
   fullheight: "100%",
+  headerHeight: 50,
 } as const
 
 export default spacing

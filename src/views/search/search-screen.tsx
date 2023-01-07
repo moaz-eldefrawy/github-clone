@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native"
 import { useDispatch } from "react-redux"
+import { Header, StyledCancelButton, StyledStatusBar } from "@github/views/Home/home-style"
 import { ActivityIndicator, Button, Image, SafeAreaView, Screen, Text } from "@github-shared"
 import { IResponse } from "@github/services"
 import {
@@ -96,12 +97,9 @@ export const SearchScreen = () => {
     setCurrPage(nextPage)
   }
 
-  // TODO: add a clear input button and bind it to this function
-  // const clearInput = () => {
-  //   setSearchPhrase("")
-  //   setIsFocused(false)
-  //   Keyboard.dismiss()
-  // }
+  const clearInput = () => {
+    setSearchPhrase("")
+  }
 
   const renderItem: ListRenderItem<IGithubUser> = ({ item }) => {
     return (
@@ -116,27 +114,33 @@ export const SearchScreen = () => {
       setNextPage(nextPage + 1)
       fetchUsers(searchPhrase, currPage)
     }
-  }, [searchPhrase, currPage, nextPage, totalCount, searchResults.length, fetchUsers])
+  }, [searchPhrase, currPage, nextPage, totalCount, searchResults.length, fetchUsers, isFocused])
 
   return (
     <Screen preset="fixedStack">
       <SafeAreaView top bottom>
+        <StyledStatusBar />
         <View style={styles.container}>
-          <View style={styles.searchBarView}>
-            <Button style={styles.backButton} onPress={() => NavigationService.goBack()}>
+          <Header style={styles.searchBarView}>
+            <Button onPress={() => NavigationService.goBack()}>
               <Image source={R.image.backAndroid} />
             </Button>
-            <TextInput
-              placeholderTextColor={R.color.textInputPlaceholder}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              style={[styles.input, isFocused && styles.activeInput]}
-              placeholder={R.string.search.placeholder}
-              value={searchPhrase}
-              onChangeText={setSearchPhrase}
-              onSubmitEditing={handleSubmit}
-            />
-          </View>
+            <View style={[styles.inputView, isFocused && styles.activeInput]}>
+              <TextInput
+                placeholderTextColor={R.color.textInputPlaceholder}
+                onFocus={() => setIsFocused(true)}
+                style={styles.input}
+                onBlur={() => setIsFocused(false)}
+                placeholder={R.string.search.placeholder}
+                value={searchPhrase}
+                onChangeText={setSearchPhrase}
+                onSubmitEditing={handleSubmit}
+              />
+              <StyledCancelButton onPress={clearInput}>
+                <Image source={R.image.cancel} />
+              </StyledCancelButton>
+            </View>
+          </Header>
           <View style={styles.resultsView}>
             {isLoading ? (
               <ActivityIndicator preset="large" />
@@ -164,26 +168,24 @@ const styles = StyleSheet.create({
   item: {
     paddingVertical: R.spacing.medium,
   },
+  inputView: {
+    flex: 8,
+    height: "90%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: R.spacing.medium,
+  },
   input: {
     color: R.color.text,
     fontSize: R.fontSize.big,
-    flex: 8,
   },
   activeInput: {
     borderBottomWidth: 1,
-    borderBottomColor: R.color.text,
+    borderBottomColor: R.color.ripple,
   },
-  backButton: {
-    flex: 2,
-  },
-  searchBarView: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  searchBarView: {},
   resultsView: {
-    height: R.spacing.fullheight,
     flex: 10,
     justifyContent: "center",
   },
