@@ -4,6 +4,7 @@ import { AppRoute } from "@github/navigation/routes"
 
 export type IRootParamList = {
   [AppRoute.Search]: undefined
+  [AppRoute.Home]: undefined
 }
 
 type IRootRoute = keyof IRootParamList

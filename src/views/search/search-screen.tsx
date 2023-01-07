@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react"
 import {
   FlatList,
-  Keyboard,
   ListRenderItem,
   NativeSyntheticEvent,
   StyleSheet,
@@ -20,6 +19,7 @@ import {
 } from "@github/services/networking/endpoints/github"
 import { showErrorAction } from "@github/state"
 import { R } from "@github/res"
+import { NavigationService } from "@github/navigation"
 
 export const SearchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState<string>("")
@@ -96,11 +96,12 @@ export const SearchScreen = () => {
     setCurrPage(nextPage)
   }
 
-  const clearInput = () => {
-    setSearchPhrase("")
-    setIsFocused(false)
-    Keyboard.dismiss()
-  }
+  // TODO: add a clear input button and bind it to this function
+  // const clearInput = () => {
+  //   setSearchPhrase("")
+  //   setIsFocused(false)
+  //   Keyboard.dismiss()
+  // }
 
   const renderItem: ListRenderItem<IGithubUser> = ({ item }) => {
     return (
@@ -122,11 +123,9 @@ export const SearchScreen = () => {
       <SafeAreaView top bottom>
         <View style={styles.container}>
           <View style={styles.searchBarView}>
-            {isFocused && (
-              <Button style={styles.backButton} onPress={() => clearInput()}>
-                <Image source={R.image.backAndroid} />
-              </Button>
-            )}
+            <Button style={styles.backButton} onPress={() => NavigationService.goBack()}>
+              <Image source={R.image.backAndroid} />
+            </Button>
             <TextInput
               placeholderTextColor={R.color.textInputPlaceholder}
               onFocus={() => setIsFocused(true)}

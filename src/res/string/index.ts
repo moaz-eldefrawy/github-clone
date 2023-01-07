@@ -15,7 +15,11 @@ const string = Object.freeze({
     badDataError: "Something went wrong when parsing data, please try again later",
     exceptionError: "Something went wrong when performing request, please contact us",
   },
+  home: {
+    title: "Home",
+  },
   search: {
+    title: "Search",
     placeholder: "Search Github Users ...",
   },
 })
