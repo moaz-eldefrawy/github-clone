@@ -4,6 +4,7 @@ module.exports = {
   extends: "@react-native-community",
   plugins: ["import"],
   rules: {
+    "prettier/prettier": ["error", { endOfLine: "auto" }],
     quotes: ["error", "double"],
     semi: ["off"],
     "jsx-quotes": ["error", "prefer-double"],

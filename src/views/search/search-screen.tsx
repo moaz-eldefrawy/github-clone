@@ -3,7 +3,6 @@ import {
   FlatList,
   ListRenderItem,
   NativeSyntheticEvent,
-  StyleSheet,
   TextInput,
   TextInputSubmitEditingEventData,
   View,
@@ -21,6 +20,7 @@ import {
 import { showErrorAction } from "@github/state"
 import { R } from "@github/res"
 import { NavigationService } from "@github/navigation"
+import { SearchItemStyles } from "@github/views/search/search-styles"
 import { UserItem } from "./user-item"
 
 export const SearchScreen = () => {
@@ -86,6 +86,8 @@ export const SearchScreen = () => {
   const handleSubmit = (event: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
     event.preventDefault()
     setSearchResults([])
+    // TODO: make another page for navigation
+    // NavigationService.navigate(AppRoute.Results, { searchPhrase })
     setCurrPage(1)
     setNextPage(1)
     setTotalCount(0)
@@ -117,16 +119,16 @@ export const SearchScreen = () => {
     <Screen preset="fixedStack">
       <SafeAreaView top bottom>
         <StyledStatusBar />
-        <View style={styles.container}>
-          <Header style={styles.searchBarView}>
+        <View style={SearchItemStyles.container}>
+          <Header style={SearchItemStyles.searchBarView}>
             <Button onPress={() => NavigationService.goBack()}>
               <Image source={R.image.backAndroid} />
             </Button>
-            <View style={[styles.inputView, isFocused && styles.activeInput]}>
+            <View style={[SearchItemStyles.inputView, isFocused && SearchItemStyles.activeInput]}>
               <TextInput
                 placeholderTextColor={R.color.textInputPlaceholder}
                 onFocus={() => setIsFocused(true)}
-                style={styles.input}
+                style={SearchItemStyles.input}
                 onBlur={() => setIsFocused(false)}
                 placeholder={R.string.search.placeholder}
                 value={searchPhrase}
@@ -138,7 +140,7 @@ export const SearchScreen = () => {
               </StyledCancelButton>
             </View>
           </Header>
-          <View style={styles.resultsView}>
+          <View style={SearchItemStyles.resultsView}>
             {isLoading ? (
               <ActivityIndicator preset="large" />
             ) : (
@@ -155,35 +157,3 @@ export const SearchScreen = () => {
     </Screen>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: R.color.background,
-    height: R.spacing.fullheight,
-    display: "flex",
-  },
-  item: {
-    paddingVertical: R.spacing.medium,
-  },
-  inputView: {
-    flex: 8,
-    height: "90%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginHorizontal: R.spacing.medium,
-  },
-  input: {
-    color: R.color.text,
-    fontSize: R.fontSize.big,
-  },
-  activeInput: {
-    borderBottomWidth: 1,
-    borderBottomColor: R.color.ripple,
-  },
-  searchBarView: {},
-  resultsView: {
-    flex: 10,
-    justifyContent: "center",
-  },
-})
